@@ -282,6 +282,12 @@ mod test {
         ]));
     }
 
+    // this crashes my pc :( (i7 5930k & 16GB ram)
+    // #[test]
+    // fn stress_test_creation() {
+    //     let num = NatNum::from(100_000);
+    // }
+
     #[test]
     fn add_zeros() {
         let num1 = NatNum::from(0);
