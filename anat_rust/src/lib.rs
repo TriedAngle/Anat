@@ -162,6 +162,7 @@ pub fn simple_graph_intonation(level: u32) -> String {
     intonation
 }
 
+// TESTS
 #[cfg(test)]
 mod test {
     use super::*;
