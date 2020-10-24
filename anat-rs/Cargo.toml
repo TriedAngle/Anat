@@ -1,5 +1,5 @@
 [package]
-name = "anat_rust"
+name = "anat-rs"
 version = "0.1.0"
 authors = ["TriedAngle <Sebastian@Strobl.net>"]
 edition = "2018"
@@ -7,6 +7,10 @@ edition = "2018"
 [lib]
 name = "anat"
 path = "src/lib.rs"
+
+[[example]]
+name = "addition"
+path = "examples/addition.rs"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
