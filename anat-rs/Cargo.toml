@@ -1,8 +1,11 @@
 [package]
 name = "anat-rs"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["TriedAngle <Sebastian@Strobl.net>"]
 edition = "2018"
+repository = "https://github.com/TriedAngle/Anat"
+description = "A library to represent natural numbers as well-founded sets"
+license = "Apache-2.0"
 
 [lib]
 name = "anat"
