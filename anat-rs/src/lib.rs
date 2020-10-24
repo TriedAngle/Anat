@@ -15,6 +15,9 @@
 // NatNum::Mult([NatNum::Zero, NatNum::Mult([NatNum::Zero])])
 // 3 = { {}, { {} }, { {}, { {} } } }
 // NatNum::Mult([NatNum::Zero, NatNum::Mult([NatNum::Zero]), NatNum::Mult([NatNum::Zero, NatNum::Mult([NatNum::Zero])])
+//
+// TODO: maybe change Vec<NatNum> to an array when const generics hit stable, to avoid heap allocations and potential runtime costs.
+//
 #[derive(PartialEq, Debug, Clone)]
 pub enum NatNum {
     Zero,
@@ -89,7 +92,7 @@ impl From<u32> for NatNum {
 
 /// returns the count of the elements
 /// doesn't check the 'correctness of the tree' / 'Wohlfundierung'
-pub fn simple_nat_to_num(num: &Vec<NatNum>) -> u32 {
+fn simple_nat_to_num(num: &Vec<NatNum>) -> u32 {
     return num.len() as u32;
 }
 
@@ -101,7 +104,7 @@ pub fn simple_nat_to_num(num: &Vec<NatNum>) -> u32 {
 /// curr = 0 => stop iteration e.g tree is fully populated
 /// curr = 1 => Add a NatNum::Zero
 /// curr = _ => Add a new subtree and recursively populates it (same function)
-pub fn populate_nat_tree(tree: &mut Vec<NatNum>, curr: u32) {
+fn populate_nat_tree(tree: &mut Vec<NatNum>, curr: u32) {
     match curr {
         0 => return,
         1 => {
@@ -119,7 +122,7 @@ pub fn populate_nat_tree(tree: &mut Vec<NatNum>, curr: u32) {
 }
 
 // copies itself and pushes itself into itself as a new subtree 
-pub fn recursive_nat_tree_increment(tree: &mut Vec<NatNum>, rem: u32) {
+fn recursive_nat_tree_increment(tree: &mut Vec<NatNum>, rem: u32) {
     if rem == 0 {
         return;
     }
@@ -133,7 +136,7 @@ pub fn recursive_nat_tree_increment(tree: &mut Vec<NatNum>, rem: u32) {
 // tree: vector of a natnum
 // graph: String that should be manipulated
 // level: current subtree level, used for intonation
-pub fn recursive_nat_tree_to_string_simple(tree: &Vec<NatNum>, graph: &mut String, level: u32) {
+fn recursive_nat_tree_to_string_simple(tree: &Vec<NatNum>, graph: &mut String, level: u32) {
     for x in tree {
         match x {
             NatNum::Zero => {
@@ -152,7 +155,7 @@ pub fn recursive_nat_tree_to_string_simple(tree: &Vec<NatNum>, graph: &mut Strin
 // |-> {}
 // |-> {}
 // |   |-> {}
-pub fn simple_graph_intonation(level: u32) -> String {
+fn simple_graph_intonation(level: u32) -> String {
     let mut intonation = String::new();
     intonation.push_str("|");
     for _ in 0..level {
