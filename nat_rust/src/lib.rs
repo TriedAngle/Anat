@@ -54,8 +54,6 @@ impl NatNum {
                 }
             }
         }
-
-        unreachable!("Oh no you touched the no no square :(")
     }
 
     // TODO: Write a Tree to Number parser.
@@ -64,7 +62,14 @@ impl NatNum {
     }
 
     pub fn to_string(&self) -> String {
-        unimplemented!()
+        match self {
+            NatNum::Zero => String::from("{}"),
+            NatNum::Mult(tree) => {
+                let mut graph = String::from("{}\n");
+                recursive_nat_tree_to_string_simple(tree, &mut graph, 0);
+                graph
+            }
+        }
     }
 }
 
@@ -87,6 +92,7 @@ impl From<u32> for NatNum {
 pub fn simple_nat_to_num(num: &Vec<NatNum>) -> u32 {
     return num.len() as u32;
 }
+
 
 /// recursively populates a vector with a tree like structure of NatNumbers
 /// curr: remaining iterations for each tree / subtree
@@ -112,10 +118,7 @@ pub fn populate_nat_tree(tree: &mut Vec<NatNum>, curr: u32) {
     }
 }
 
-// 2, 1
-// 2 + 1
-// 2 = { Z, { Z } }
-// 3 = { Z, { Z }, { Z, { Z } } }
+// copies itself and pushes itself into itself as a new subtree 
 pub fn recursive_nat_tree_increment(tree: &mut Vec<NatNum>, rem: u32) {
     if rem == 0 {
         return;
@@ -124,6 +127,39 @@ pub fn recursive_nat_tree_increment(tree: &mut Vec<NatNum>, rem: u32) {
     let end_num = NatNum::Mult(new_subtree);
     tree.push(end_num);
     recursive_nat_tree_increment(tree, rem - 1)
+}
+
+// creates a string from the tree with intonations for each Subtree
+// tree: vector of a natnum
+// graph: String that should be manipulated
+// level: current subtree level, used for intonation
+pub fn recursive_nat_tree_to_string_simple(tree: &Vec<NatNum>, graph: &mut String, level: u32) {
+    for x in tree {
+        match x {
+            NatNum::Zero => {
+                graph.push_str(&format!("{}{{}}\n", simple_graph_intonation(level)));
+            }
+            NatNum::Mult(subtree) => {
+                graph.push_str(&format!("{}{{}}\n", simple_graph_intonation(level)));
+                recursive_nat_tree_to_string_simple(subtree, graph, level + 1)
+            }
+        }
+    }
+}
+
+// example:
+//
+// |-> {}
+// |-> {}
+// |   |-> {}
+pub fn simple_graph_intonation(level: u32) -> String {
+    let mut intonation = String::new();
+    intonation.push_str("|");
+    for _ in 0..level {
+        intonation.push_str("  |");
+    }
+    intonation.push_str("->");
+    intonation
 }
 
 #[cfg(test)]
@@ -262,5 +298,16 @@ mod test {
         assert_eq!(num1.add_rec(&num2), NatNum::from(3));
         assert_eq!(num2.add_rec(&num2), NatNum::from(4));
         assert_eq!(num3.add_rec(&num2), NatNum::from(5));
+    }
+    
+    #[test]
+    fn prints() {
+        let num0 = NatNum::from(0);
+        let num1 = NatNum::from(1);
+        let num4 = NatNum::from(4);
+        assert_eq!(num0.to_string(), "{}");
+        assert_eq!(num1.to_string(), "{}\n|->{}\n");
+        assert_eq!(num4.to_string(), "{}\n|->{}\n|->{}\n|  |->{}\n|->{}\n|  |->{}\n|  |->{}\n|  |  |->{}\n|->{}\n|  |->{}\n|  |->{}\n|  |  |->{}\n|  |->{}\n|  |  |->{}\n|  |  |->{}\n|  |  |  |->{}\n");
+        
     }
 }
